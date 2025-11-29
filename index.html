@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>St. Twins Score Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .formula {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-right: 10px;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        .team-list {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .team-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px solid #e0e0e0;
+        }
+
+        .team-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .team-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .team-rides {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .remove-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .remove-btn:hover {
+            background: #c82333;
+        }
+
+        .results {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .results h3 {
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .result-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .result-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .result-label {
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 2px solid #e0e0e0;
+        }
+
+        canvas {
+            max-width: 100%;
+        }
+
+        .strategy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .strategy-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .strategy-card h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .strategy-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏆 St. Twins Score Calculator</h1>
+            <div class="formula">
+                total = 20 × points² / √rides
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Your Team Section -->
+            <div class="section">
+                <h2>Your Team</h2>
+                <div class="input-group">
+                    <label for="yourPoints">Your Points (current or estimated):</label>
+                    <input type="number" id="yourPoints" min="0" step="1" placeholder="Enter your points">
+                </div>
+                <div class="input-group">
+                    <label for="yourRides">Your Rides:</label>
+                    <input type="number" id="yourRides" min="1" step="1" placeholder="Enter number of rides">
+                </div>
+                <div class="input-group">
+                    <label for="maxPoints">Maximum Possible Points:</label>
+                    <input type="number" id="maxPoints" min="1" step="1" placeholder="Enter max points possible">
+                </div>
+            </div>
+
+            <!-- Other Teams Section -->
+            <div class="section">
+                <h2>Other Teams</h2>
+                <div class="input-group">
+                    <label for="teamName">Team Name:</label>
+                    <input type="text" id="teamName" placeholder="Enter team name">
+                </div>
+                <div class="input-group">
+                    <label for="teamRides">Team Rides:</label>
+                    <input type="number" id="teamRides" min="1" step="1" placeholder="Enter number of rides">
+                </div>
+                <button class="button" onclick="addTeam()">Add Team</button>
+                
+                <div class="team-list" id="teamList"></div>
+            </div>
+
+            <!-- Calculate Button -->
+            <div class="section">
+                <button class="button" onclick="calculate()">Calculate Scores & Strategy</button>
+            </div>
+
+            <!-- Results Section -->
+            <div id="results"></div>
+
+            <!-- Chart Section -->
+            <div id="chartSection"></div>
+        </div>
+    </div>
+
+    <script>
+        const teams = [];
+
+        function calculateScore(points, rides) {
+            return 20 * Math.pow(points, 2) / Math.pow(rides, 0.5);
+        }
+
+        function addTeam() {
+            const name = document.getElementById('teamName').value.trim();
+            const rides = parseInt(document.getElementById('teamRides').value);
+
+            if (!name || !rides || rides < 1) {
+                alert('Please enter valid team name and rides');
+                return;
+            }
+
+            teams.push({ name, rides });
+            updateTeamList();
+            
+            // Clear inputs
+            document.getElementById('teamName').value = '';
+            document.getElementById('teamRides').value = '';
+        }
+
+        function removeTeam(index) {
+            teams.splice(index, 1);
+            updateTeamList();
+        }
+
+        function updateTeamList() {
+            const listEl = document.getElementById('teamList');
+            if (teams.length === 0) {
+                listEl.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">No teams added yet</p>';
+                return;
+            }
+
+            listEl.innerHTML = teams.map((team, index) => `
+                <div class="team-item">
+                    <span class="team-name">${team.name}</span>
+                    <span class="team-rides">${team.rides} rides</span>
+                    <button class="remove-btn" onclick="removeTeam(${index})">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        function findOptimalRides(maxPoints, targetScore) {
+            // Solve: 20 * maxPoints^2 / sqrt(rides) = targetScore
+            // sqrt(rides) = 20 * maxPoints^2 / targetScore
+            // rides = (20 * maxPoints^2 / targetScore)^2
+            
+            const ridesNeeded = Math.pow((20 * Math.pow(maxPoints, 2)) / targetScore, 2);
+            return ridesNeeded;
+        }
+
+        function calculate() {
+            const yourPoints = parseFloat(document.getElementById('yourPoints').value);
+            const yourRides = parseFloat(document.getElementById('yourRides').value);
+            const maxPoints = parseFloat(document.getElementById('maxPoints').value);
+
+            if (!maxPoints || maxPoints < 1) {
+                alert('Please enter maximum possible points');
+                return;
+            }
+
+            let html = '<div class="results"><h3>Results</h3>';
+
+            // Your current score
+            if (yourPoints && yourRides && yourRides > 0) {
+                const yourScore = calculateScore(yourPoints, yourRides);
+                html += `<div class="result-item">
+                    <span class="result-label">Your Current Score:</span>
+                    ${yourScore.toFixed(2)}
+                </div>`;
+            }
+
+            // Calculate other teams' potential scores (assuming max points)
+            if (teams.length > 0) {
+                html += '<div class="result-item"><span class="result-label">Other Teams (assuming max points):</span></div>';
+                
+                const teamScores = teams.map(team => ({
+                    ...team,
+                    score: calculateScore(maxPoints, team.rides)
+                })).sort((a, b) => b.score - a.score);
+
+                teamScores.forEach(team => {
+                    html += `<div class="result-item">
+                        ${team.name}: ${team.score.toFixed(2)} (${team.rides} rides)
+                    </div>`;
+                });
+
+                // Find highest opponent score
+                const highestOpponentScore = teamScores[0].score;
+                
+                // Calculate rides needed to beat highest opponent
+                const ridesToBeat = findOptimalRides(maxPoints, highestOpponentScore * 1.01);
+                const ridesToTie = findOptimalRides(maxPoints, highestOpponentScore);
+
+                html += '</div><div class="results"><h3>Strategy Recommendations</h3>';
+                html += `<div class="strategy-grid">
+                    <div class="strategy-card">
+                        <h4>To Beat Leader</h4>
+                        <div class="strategy-value">${Math.floor(ridesToBeat)}</div>
+                        <div style="color: #666; margin-top: 5px; font-size: 14px;">rides (with max points)</div>
+                    </div>
+                    <div class="strategy-card">
+                        <h4>To Tie Leader</h4>
+                        <div class="strategy-value">${Math.ceil(ridesToTie)}</div>
+                        <div style="color: #666; margin-top: 5px; font-size: 14px;">rides (with max points)</div>
+                    </div>
+                    <div class="strategy-card">
+                        <h4>Leader's Score</h4>
+                        <div class="strategy-value">${highestOpponentScore.toFixed(0)}</div>
+                        <div style="color: #666; margin-top: 5px; font-size: 14px;">${teamScores[0].name}</div>
+                    </div>
+                </div>`;
+
+                // Create visualization
+                createChart(maxPoints, teamScores, ridesToBeat, ridesToTie);
+            }
+
+            html += '</div>';
+            document.getElementById('results').innerHTML = html;
+        }
+
+        function createChart(maxPoints, teamScores, ridesToBeat, ridesToTie) {
+            const chartHtml = `
+                <div class="chart-container">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">Score vs Rides (with max points)</h3>
+                    <canvas id="scoreChart" width="800" height="400"></canvas>
+                </div>
+            `;
+            document.getElementById('chartSection').innerHTML = chartHtml;
+
+            const canvas = document.getElementById('scoreChart');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            const padding = 50;
+
+            // Clear canvas
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, width, height);
+
+            // Calculate data points for the curve
+            const minRides = 1;
+            const maxRides = Math.max(200, ...teamScores.map(t => t.rides), ridesToBeat * 1.5);
+            const points = [];
+            
+            for (let rides = minRides; rides <= maxRides; rides += 1) {
+                const score = calculateScore(maxPoints, rides);
+                points.push({ rides, score });
+            }
+
+            // Find max score for scaling
+            const maxScore = Math.max(...points.map(p => p.score));
+
+            // Draw axes
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(padding, height - padding);
+            ctx.lineTo(width - padding, height - padding);
+            ctx.moveTo(padding, height - padding);
+            ctx.lineTo(padding, padding);
+            ctx.stroke();
+
+            // Draw labels
+            ctx.fillStyle = '#333';
+            ctx.font = '14px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('Rides', width / 2, height - 10);
+            
+            ctx.save();
+            ctx.translate(15, height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('Score', 0, 0);
+            ctx.restore();
+
+            // Draw the curve
+            ctx.strokeStyle = '#667eea';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            
+            points.forEach((point, i) => {
+                const x = padding + ((point.rides - minRides) / (maxRides - minRides)) * (width - 2 * padding);
+                const y = height - padding - (point.score / maxScore) * (height - 2 * padding);
+                
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            ctx.stroke();
+
+            // Draw team points
+            teamScores.forEach((team, index) => {
+                const x = padding + ((team.rides - minRides) / (maxRides - minRides)) * (width - 2 * padding);
+                const y = height - padding - (team.score / maxScore) * (height - 2 * padding);
+                
+                ctx.fillStyle = index === 0 ? '#f5576c' : '#764ba2';
+                ctx.beginPath();
+                ctx.arc(x, y, 6, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                ctx.fillStyle = '#333';
+                ctx.font = '12px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(team.name, x, y - 12);
+            });
+
+            // Draw optimal rides marker
+            if (ridesToBeat < maxRides) {
+                const x = padding + ((ridesToBeat - minRides) / (maxRides - minRides)) * (width - 2 * padding);
+                
+                ctx.strokeStyle = '#28a745';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath();
+                ctx.moveTo(x, height - padding);
+                ctx.lineTo(x, padding);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                
+                ctx.fillStyle = '#28a745';
+                ctx.font = 'bold 12px sans-serif';
+                ctx.fillText('To beat', x, padding - 5);
+            }
+        }
+
+        // Initialize
+        updateTeamList();
+    </script>
+</body>
+</html>
