@@ -324,16 +324,16 @@
 
         // Color palette for teams - easily distinguishable colors
         const teamColors = [
-            '#e74c3c', // red
             '#9b59b6', // purple
-            '#3498db', // blue
             '#1abc9c', // teal
             '#f39c12', // orange
-            '#e67e22', // dark orange
+            '#3498db', // blue
             '#c0392b', // dark red
+            '#e67e22', // dark orange
             '#8e44ad', // dark purple
             '#2980b9', // dark blue
-            '#16a085'  // dark teal
+            '#16a085',  // dark teal
+            '#e74c3c' // red
         ];
 
         function getTeamColor(index) {
@@ -475,7 +475,7 @@
                 html += '</div><div class="results"><h3>Strategy Recommendations</h3>';
                 html += `<div class="strategy-grid">
                     <div class="strategy-card">
-                        <h4>To Beat Leader</h4>
+                        <h4>To Beat the Best Opponent</h4>
                         <div class="strategy-value">${Math.floor(ridesToBeat)}</div>
                         <div style="color: #666; margin-top: 5px; font-size: 14px;">rides (with ${pointsToUse} points)</div>
                     </div>
@@ -485,7 +485,7 @@
                         <div style="color: #666; margin-top: 5px; font-size: 14px;">${teamScores[0].name}</div>
                     </div>
                     ${leaderLosesAtRides ? `<div class="strategy-card">
-                        <h4>Leader Loses If</h4>
+                        <h4>The Best Opponent Loses If</h4>
                         <div class="strategy-value">${leaderLosesAtRides}+</div>
                         <div style="color: #666; margin-top: 5px; font-size: 14px;">rides (${teamScores[0].name})</div>
                     </div>` : ''}
