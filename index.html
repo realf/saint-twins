@@ -459,8 +459,8 @@
                 
                 // Calculate rides needed to beat highest opponent using YOUR assumed points
                 const pointsToUse = yourPoints || maxPoints;
-                const ridesToBeat = findOptimalRides(pointsToUse, highestOpponentScore * 1.01);
                 const ridesToTie = findOptimalRides(pointsToUse, highestOpponentScore);
+                const ridesToBeat = ridesToTie;
                 
                 // Calculate how many rides would make the leader lose (based on YOUR score)
                 let leaderLosesAtRides = null;
@@ -475,7 +475,7 @@
                 html += '</div><div class="results"><h3>Strategy Recommendations</h3>';
                 html += `<div class="strategy-grid">
                     <div class="strategy-card">
-                        <h4>To Beat the Best Opponent</h4>
+                        <h4>To Tie the Best Opponent</h4>
                         <div class="strategy-value">${Math.floor(ridesToBeat)}</div>
                         <div style="color: #666; margin-top: 5px; font-size: 14px;">rides (with ${pointsToUse} points)</div>
                     </div>
